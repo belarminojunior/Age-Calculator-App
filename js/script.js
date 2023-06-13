@@ -9,7 +9,7 @@ let yearOutput = document.getElementById('yearOutput');
 let submissionBtn = document.getElementById('submissionBtn');
 let error = '0.5px solid var(--LIGHT-RED)';
 
-const MAX_VALID_YEAR = 9999;
+const MAX_VALID_YEAR = new Date().getFullYear();
 const MIN_VALID_YEAR = 1700;
 
 submissionBtn.addEventListener('click', () => {
@@ -17,7 +17,8 @@ submissionBtn.addEventListener('click', () => {
     const BIRTH_MONTH = monthInput.value;
     const BIRTH_YEAR = yearInput.value;
 
-    if (validateDate(BIRTH_DATE, BIRTH_MONTH, BIRTH_YEAR)) {
+    if (validateDay(BIRTH_DATE, BIRTH_MONTH, BIRTH_YEAR)
+    && validateMonth(BIRTH_MONTH) && validateYear(BIRTH_DATE, BIRTH_MONTH, BIRTH_YEAR)) {
     } else {
         return;
     }
@@ -62,8 +63,6 @@ submissionBtn.addEventListener('click', () => {
     yearOutput.innerText = years;
     monthOutput.innerText = months;
     dayOutput.innerText = days;
-
-
 });
 
 dayInput.addEventListener('blur', () => {
@@ -75,7 +74,7 @@ dayInput.addEventListener('blur', () => {
     if (D == '') {
         showMessage(dayInput, "This field is required", error);
         return false;
-    } else if (!validateDate(D, M, Y)) {
+    } else if (!validateDay(D, M, Y)) {
         showMessage(dayInput, "Must be a valid day", error);
         return false;
     } else {
@@ -87,15 +86,12 @@ dayInput.addEventListener('blur', () => {
 
 monthInput.addEventListener('blur', () => {
 
-    const D = dayInput.value;
     const M = monthInput.value;
-    const Y = yearInput.value;
-
 
     if (M == '') {
         showMessage(monthInput, "This field is required", error);
         return false;
-    } else if (!validateDate(D, M, Y)) {
+    } else if (!validateMonth(M)) {
         showMessage(monthInput, "Must be a valid month", error);
         return false;
     } else {
@@ -114,7 +110,7 @@ yearInput.addEventListener('blur', () => {
     if (Y == '') {
         showMessage(yearInput, "This field is required", error);
         return false;
-    } else if (!validateDate(D, M, Y)) {
+    } else if (!validateYear(D, M, Y)) {
         showMessage(yearInput, "Must be in past", error);
         return false;
     } else {
@@ -129,6 +125,7 @@ function showMessage(element, msg, border) {
     element.nextElementSibling.innerText = msg;
 }
 
+/*
 function validateDate(day, month, year) {
 
     if (year > MAX_VALID_YEAR || year < MIN_VALID_YEAR)
@@ -154,6 +151,37 @@ function validateDate(day, month, year) {
     
     return true;
 
+}
+*/
+
+function validateDay(day, month, year) {
+    if (day < 1 || day > 31)
+        return false;
+    
+    // February handling
+    if (month == 2) {
+        if (isLeap(year)) {
+            return (day <= 29);
+        } else {
+            return (day <= 28);
+        }
+    }
+
+    if (month == 4 || month == 6 || month == 9 || month == 11)
+        return (day <= 30);
+    
+    return true;
+}
+
+function validateMonth(month) {
+    return month >= 1 && month <= 12;
+}
+
+function validateYear(day, month, year) {
+    const NEWER_DATE = new Date();
+    const OLDER_DATE = new Date(`${year}-${month}-${day}`);
+
+    return OLDER_DATE.setHours(0, 0, 0, 0) <= NEWER_DATE.setHours(0, 0, 0, 0);
 }
 
 function isLeap(year) {

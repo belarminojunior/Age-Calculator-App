@@ -115,6 +115,10 @@ p.error {
     color: var(--PURPLE);
 }
 
+footer a {
+    text-decoration: none;
+}
+
 .attribution { 
     font-size: 11px; 
     text-align: center; 
