@@ -13,27 +13,50 @@ const MAX_VALID_YEAR = 9999;
 const MIN_VALID_YEAR = 1700;
 
 submissionBtn.addEventListener('click', () => {
-    const D = dayInput.value;
-    const M = monthInput.value;
-    const Y = yearInput.value;
+    const BIRTH_DATE = dayInput.value;
+    const BIRTH_MONTH = monthInput.value;
+    const BIRTH_YEAR = yearInput.value;
 
-    if (validateDate(D, M, Y)) {
+    if (validateDate(BIRTH_DATE, BIRTH_MONTH, BIRTH_YEAR)) {
     } else {
         return;
     }
 
-    let years = (new Date().getFullYear()) - Y;
-    let months = (new Date().getMonth()) - M;
-    let days = new Date().getDate() - D;
+    let today = new Date();
 
-    if (months < 0) {
-        years -= 1;
-        months += 12;
+    // Age Calculation
+
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth() + 1;
+    let currentDate = today.getDate();
+
+    const DAYS_PER_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    // Day handling
+    if (currentDate < BIRTH_DATE) {
+        currentMonth -= 1;
+
+        days = currentDate + DAYS_PER_MONTH[currentMonth === 0 ? 11 : currentMonth - 1] - BIRTH_DATE;
+
+        days = isLeap(currentYear) && currentMonth >= 2
+            ? days += 1
+            : days;
+
+    } else {
+        days = currentDate - BIRTH_DATE;
     }
 
-    if (days < 0) {
-        days += getNoOfDays(Y, M - 1);
+    // Month handling
+    if (currentMonth < BIRTH_MONTH) {
+        currentYear -= 1;
+        months = currentMonth + 12 - BIRTH_MONTH;
+    } else {
+        months = currentMonth - BIRTH_MONTH;
     }
+
+    // Year handling
+    years = currentYear - BIRTH_YEAR;
+
 
     // Displaying
     yearOutput.innerText = years;
@@ -42,11 +65,6 @@ submissionBtn.addEventListener('click', () => {
 
 
 });
-
-function getNoOfDays(y, m) {
-    // I'll make somethin better than this...
-    return new Date(y, m, 0).getDate();
-}
 
 function validateDate(day, month, year) {
 
