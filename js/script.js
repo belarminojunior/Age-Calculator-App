@@ -66,6 +66,69 @@ submissionBtn.addEventListener('click', () => {
 
 });
 
+dayInput.addEventListener('blur', () => {
+
+    const D = dayInput.value;
+    const M = monthInput.value;
+    const Y = yearInput.value;
+
+    if (D == '') {
+        showMessage(dayInput, "This field is required", error);
+        return false;
+    } else if (!validateDate(D, M, Y)) {
+        showMessage(dayInput, "Must be a valid day", error);
+        return false;
+    } else {
+        showMessage(dayInput, '', '');
+        return true;
+    }
+
+});
+
+monthInput.addEventListener('blur', () => {
+
+    const D = dayInput.value;
+    const M = monthInput.value;
+    const Y = yearInput.value;
+
+
+    if (M == '') {
+        showMessage(monthInput, "This field is required", error);
+        return false;
+    } else if (!validateDate(D, M, Y)) {
+        showMessage(monthInput, "Must be a valid month", error);
+        return false;
+    } else {
+        showMessage(monthInput, '', '');
+        return true;
+    }
+
+});
+
+yearInput.addEventListener('blur', () => {
+
+    const D = dayInput.value;
+    const M = monthInput.value;
+    const Y = yearInput.value;
+
+    if (Y == '') {
+        showMessage(yearInput, "This field is required", error);
+        return false;
+    } else if (!validateDate(D, M, Y)) {
+        showMessage(yearInput, "Must be in past", error);
+        return false;
+    } else {
+        showMessage(yearInput, '', '');
+        return true;
+    }
+
+});
+
+function showMessage(element, msg, border) {
+    element.style.border = border;
+    element.nextElementSibling.innerText = msg;
+}
+
 function validateDate(day, month, year) {
 
     if (year > MAX_VALID_YEAR || year < MIN_VALID_YEAR)
