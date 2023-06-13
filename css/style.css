@@ -130,7 +130,7 @@ footer a {
 
 /* || RESPONSIVENESS */
 
-@media only screen and (max-width: 375px) {
+@media only screen and (max-width: 525px) {
     .input {
         margin-bottom: 40px;
     }   
